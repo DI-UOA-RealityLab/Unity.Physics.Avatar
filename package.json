@@ -1,0 +1,29 @@
+{
+    "name": "nkua.di.realitylab.unity.physics.avatar",
+    "version": "0.0.1",
+    "displayName": "NKUA.DI.RealityLab.Physics.Avatar",
+    "description": "A set of tools to help with physical avatar representation in virtual environments.",
+    "unity": "2021.3",
+    "unityRelease": "1f1",
+    "keywords": [
+        "controller",
+        "hand",
+        "vr",
+        "ar",
+        "xr",
+        "unity"
+    ],
+    "license": "MIT",
+    "author": {
+      "name": "Christos Lougiakis",
+      "email": "chrislou@di.uoa.gr",
+      "url": "http://users.uoa.gr/~chrislou/"
+    },
+    "samples": [
+      {
+          "displayName": "Articulation Bodies Sample",
+          "description": "Contains sample scenes and assets that showcase the use of physics hands using Articulation Bodies. It requires Oculus Integration to be imported.",
+          "path": "Samples~/ArticulationBodiesSample"
+      }
+    ]
+}

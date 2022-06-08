@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb44ca79dda8f2b49a74b9f385191d05, type: 3}
+  m_Name: Basic Articulation Bodies Configuration (3Axes)
+  m_EditorClassIdentifier: 
+  Root:
+    UseGravity: 0
+    Mass: 0.0000001
+    CollisionDetectionMode: 3
+  UseWristAnchorRotation: 0
+  Palm:
+    UseGravity: 0
+    Mass: 0.25
+    CollisionDetectionMode: 3
+    LinearDamping: 0
+    AngularDamping: 0
+    JointFriction: 0
+    PositionDrives:
+      Stiffness: 10000
+      Damping: 0
+      ForceLimit: 10
+    RotationDrives:
+      Stiffness: 10000
+      Damping: 0
+      ForceLimit: 1000
+  FingerBone:
+    UseGravity: 0
+    Mass: 0.015
+    CollisionDetectionMode: 3
+    LinearDamping: 0
+    AngularDamping: 0
+    JointFriction: 0
+    PositionDrives:
+      Stiffness: 10000
+      Damping: 1
+      ForceLimit: 1000
+    RotationDrives:
+      Stiffness: 10000
+      Damping: 1
+      ForceLimit: 1000
+  MaxLinearVelocity: 2
+  MaxAngularVelocity: 1
+  MaxDepenetrationVelocity: 1
+  MaxJointVelocity: 1
+  HandPhysicMaterial: {fileID: 13400000, guid: 5c3bf28feb6ef334a9563a28d31fb90d, type: 2}
+  OnConfigurationChange:
+    m_PersistentCalls:
+      m_Calls: []

@@ -1,0 +1,16 @@
+{
+    "name": "NKUA.DI.RealityLab.Physics.Avatar.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:7b10a2df8a03604499f4bba5516c33ae"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
