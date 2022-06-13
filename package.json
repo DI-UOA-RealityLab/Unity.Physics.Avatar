@@ -1,6 +1,6 @@
 {
     "name": "nkua.di.realitylab.unity.physics.avatar",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "displayName": "NKUA.DI.RealityLab.Physics.Avatar",
     "description": "A set of tools to help with physical avatar representation in virtual environments.",
     "unity": "2021.3",
@@ -23,7 +23,7 @@
       {
           "displayName": "Articulation Bodies Sample",
           "description": "Contains sample scenes and assets that showcase the use of physics hands using Articulation Bodies. It requires Oculus Integration to be imported.",
-          "path": "Samples/ArticulationBodiesSample"
+          "path": "Samples~/ArticulationBodiesSample"
       }
     ]
 }

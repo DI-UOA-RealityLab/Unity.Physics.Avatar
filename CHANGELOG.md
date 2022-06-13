@@ -1,3 +1,10 @@
+## 0.0.3 (2022-06-13)
+
+#### Fixes
+
+* **structure:** change the name of the samples folder
+  > Due to unforseen problems when changing the samples folder name, the samples folder was named back "Samples~".
+
 ## 0.0.2 (2022-06-13)
 
 #### Features
