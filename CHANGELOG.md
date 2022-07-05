@@ -1,3 +1,10 @@
+## 0.0.4 (2022-07-05)
+
+#### Fixes
+
+* **fix:** fix rotation lag on fingers
+  > There were a lot of issues when the force limit of the wrist was higher than the fingers resulting into a lag on the finger movement. This is now fixed by adding colliders to the Articulation Bodies that didn't have an immediate one. The only requirement is to add a layer to the project that doesn't collide with anything so these colliders can be set to work like this and select it on the ArticulationBodiesHand script.
+
 ## 0.0.3 (2022-06-13)
 
 #### Fixes
