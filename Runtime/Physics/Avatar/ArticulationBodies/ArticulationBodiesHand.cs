@@ -8,12 +8,16 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
     public class ArticulationBodiesHand : MonoBehaviour
     {
         [SerializeField]
+        private GameObject animatedHandModel;
+        public GameObject AnimatedHandModel {get {return animatedHandModel;} set {animatedHandModel = value;}}
+
+        [SerializeField]
         private ArticulationBodiesConfiguration articulationBodiesConfiguration;
         public ArticulationBodiesConfiguration ArticulationBodiesConfiguration {get {return articulationBodiesConfiguration;} set {articulationBodiesConfiguration = value;}}
 
         [SerializeField]
-        private GameObject animatedHandModel;
-        public GameObject AnimatedHandModel {get {return animatedHandModel;} set {animatedHandModel = value;}}
+        private LayerMask noCollisionLayer;
+        public LayerMask NoCollisionLayer {get {return noCollisionLayer;} set {noCollisionLayer = value;}}
 
         [SerializeField]
         private GameObject cloneHandWithPhysics;
@@ -72,13 +76,13 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
 
         void SetupHand()
         {
-            SetupColliderProperties();
-
             CleanHandParentTransforms();
 
             CreateHandHierarchy();
 
             SetupHandArticulationBodies();
+
+            SetupColliderProperties();
 
             AddArticulationBodyFollowerComponents();
         }
@@ -235,6 +239,17 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
                 if (Hand.Palm.MeshCollider)
                 {
                     Physics.IgnoreCollision(Hand.Palm.MeshCollider, collider, true);
+                }
+            }
+
+            foreach (ArticulationBody ab in ArticulationBodiesList)
+            {
+                if (!ab.name.EndsWith("RotationZ") && !ab.name.EndsWith("Root"))
+                {
+                    SphereCollider sc = ab.gameObject.AddComponent<SphereCollider>();
+                    sc.radius = 0.005f;
+
+                    ab.gameObject.layer = (int) Mathf.Log(noCollisionLayer.value, 2);
                 }
             }
         }

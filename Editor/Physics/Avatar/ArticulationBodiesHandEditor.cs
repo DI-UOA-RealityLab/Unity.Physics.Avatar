@@ -13,6 +13,7 @@ namespace NKUA.DI.RealityLab.Editor.Physics.Avatar
 
         SerializedProperty AnimatedHandModelProperty;
         SerializedProperty ArticulationBodiesConfigurationProperty;
+        SerializedProperty NoCollisionLayerProperty;
         SerializedProperty CloneHandWithPhysicsProperty;
         SerializedProperty HandProperty;
 
@@ -42,6 +43,7 @@ namespace NKUA.DI.RealityLab.Editor.Physics.Avatar
 
             AnimatedHandModelProperty = serializedObject.FindProperty("animatedHandModel");
             ArticulationBodiesConfigurationProperty = serializedObject.FindProperty("articulationBodiesConfiguration");
+            NoCollisionLayerProperty = serializedObject.FindProperty("noCollisionLayer");
             CloneHandWithPhysicsProperty = serializedObject.FindProperty("cloneHandWithPhysics");
             HandProperty = serializedObject.FindProperty("hand");
 
@@ -83,6 +85,8 @@ namespace NKUA.DI.RealityLab.Editor.Physics.Avatar
             }
 
             EditorGUILayout.PropertyField(ArticulationBodiesConfigurationProperty);
+
+            EditorGUILayout.PropertyField(NoCollisionLayerProperty);
 
             if (AnimatedHandModelProperty.objectReferenceValue)
             {
