@@ -16,10 +16,6 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
         public ArticulationBodiesConfiguration ArticulationBodiesConfiguration {get {return articulationBodiesConfiguration;} set {articulationBodiesConfiguration = value;}}
 
         [SerializeField]
-        private LayerMask noCollisionLayer;
-        public LayerMask NoCollisionLayer {get {return noCollisionLayer;} set {noCollisionLayer = value;}}
-
-        [SerializeField]
         private GameObject cloneHandWithPhysics;
         public GameObject CloneHandWithPhysics {get {return cloneHandWithPhysics;} set {cloneHandWithPhysics = value;}}
 
@@ -242,14 +238,17 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
                 }
             }
 
-            foreach (ArticulationBody ab in ArticulationBodiesList)
+            if (articulationBodiesConfiguration.AddFakeColliders)
             {
-                if (!ab.name.EndsWith("RotationZ") && !ab.name.EndsWith("Root"))
+                foreach (ArticulationBody ab in ArticulationBodiesList)
                 {
-                    SphereCollider sc = ab.gameObject.AddComponent<SphereCollider>();
-                    sc.radius = 0.005f;
+                    if (!ab.name.EndsWith("RotationZ") && !ab.name.EndsWith("Root"))
+                    {
+                        SphereCollider sc = ab.gameObject.AddComponent<SphereCollider>();
+                        sc.radius = 0.005f;
 
-                    ab.gameObject.layer = (int) Mathf.Log(noCollisionLayer.value, 2);
+                        ab.gameObject.layer = (int) Mathf.Log(articulationBodiesConfiguration.NoCollisionLayer.value, 2);
+                    }
                 }
             }
         }
@@ -420,14 +419,14 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
         {
             foreach (Finger finger in Hand.FingersList)
             {
-                foreach (var (bone, index) in finger.BonesList.WithIndex())
+                foreach (var (bone, boneIndex) in finger.BonesList.WithIndex())
                 {
-                    SetupBone(bone, index, finger.BonesList.Count);
+                    SetupBone(bone, boneIndex, finger.BonesList.Count);
                 }
             }
         }
 
-        void SetupBone(Bone bone, int index, int listCount)
+        void SetupBone(Bone bone, int boneIndex, int boneslistCount)
         {
             // ArticulationBody articulationBody = SetupArticulationBodyComponent(bone.Root.name, bone.Root.parent, bone.Root.gameObject);
 
@@ -443,9 +442,19 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
             string boneNameX = bone.Root.name.ReplaceAt(bone.Root.name.Length - 1, 'X');
             string boneNameZ = bone.Root.name;
 
-            if (index >= listCount - 2 && index < listCount)
+            if (boneIndex >= boneslistCount - 2 && boneIndex < boneslistCount)
             {
                 ArticulationBody articulationBodyZ = SetupBoneRevoluteRotationArticulationBody(FingerBoneTransformDict[boneNameZ].gameObject, true);
+            }
+            else if (boneIndex == 0 && boneslistCount > 3)
+            {
+                ArticulationBody articulationBodyY = SetupBoneRevoluteRotationArticulationBody(FingerBoneTransformDict[boneNameY].gameObject, false, true);
+                articulationBodyY.mass = ArticulationBodiesConfiguration.Root.Mass;
+
+                ArticulationBody articulationBodyX = SetupBoneRevoluteRotationArticulationBody(FingerBoneTransformDict[boneNameX].gameObject, false, true);
+                articulationBodyX.mass = ArticulationBodiesConfiguration.Root.Mass;
+
+                ArticulationBody articulationBodyZ = SetupBoneRevoluteRotationArticulationBody(FingerBoneTransformDict[boneNameZ].gameObject, false, true);
             }
             else
             {
@@ -467,7 +476,7 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
             // }
         }
 
-        ArticulationBody SetupBoneRevoluteRotationArticulationBody(GameObject boneGameObject, bool isSingleAxis = false)
+        ArticulationBody SetupBoneRevoluteRotationArticulationBody(GameObject boneGameObject, bool isSingleAxis = false, bool isFourthAndAbove = false)
         {
             ArticulationBody articulationBody = SetupArticulationBodyComponent(boneGameObject);
 
@@ -479,7 +488,14 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
             }
             else
             {
-                SetupAllAxesRevoluteArticulationJoint(articulationBody, articulationBodiesConfiguration.FingerBone.RotationDrives);
+                if (isFourthAndAbove)
+                {
+                    SetupAllAxesRevoluteArticulationJoint(articulationBody, articulationBodiesConfiguration.FingerBone.StrongRotationDrives);
+                }
+                else
+                {
+                    SetupAllAxesRevoluteArticulationJoint(articulationBody, articulationBodiesConfiguration.FingerBone.RotationDrives);
+                }
             }
 
             return articulationBody;

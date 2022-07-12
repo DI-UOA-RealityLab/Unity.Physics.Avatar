@@ -11,8 +11,10 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
         [Header("Articulation Bodies")]
         public ArticulationBodyBaseConfiguration Root;
         public bool UseWristAnchorRotation;
+        public bool AddFakeColliders;
+        public LayerMask NoCollisionLayer;
         public ArticulationBodyConfiguration Palm;
-        public ArticulationBodyConfiguration FingerBone;
+        public ArticulationBodyFingerConfiguration FingerBone;
 
 
         [Header("Stability")]
@@ -49,6 +51,12 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
         [Header("Articulation Drives")]
         public ArticulationDriveConfiguration PositionDrives;
         public ArticulationDriveConfiguration RotationDrives;
+    }
+
+    [Serializable]
+    public class ArticulationBodyFingerConfiguration : ArticulationBodyConfiguration
+    {
+        public ArticulationDriveConfiguration StrongRotationDrives;
     }
 
     [Serializable]
