@@ -1,3 +1,10 @@
+## 0.0.5 (2022-07-12)
+
+#### Features
+
+* **feature:** Add more options to the configuration Scriptable Object of the Articulation Bodies Hand
+  > The option to add the missing colliders of the hand on a layer that doesn't collide with anything else was moved from the ArticulationBodiesHand class to the ArticulationBodiesConfiguration Scriptable Object. Additionally, on the configuration was added a different section for the ArticulationDrives of the finger to make the ones that have long chains (>3) of bones in order to make them stronger and hold the rest of the structure.
+
 ## 0.0.4 (2022-07-05)
 
 #### Fixes

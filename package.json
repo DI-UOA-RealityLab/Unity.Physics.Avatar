@@ -1,6 +1,6 @@
 {
     "name": "nkua.di.realitylab.unity.physics.avatar",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "displayName": "NKUA.DI.RealityLab.Physics.Avatar",
     "description": "A set of tools to help with physical avatar representation in virtual environments.",
     "unity": "2021.3",
