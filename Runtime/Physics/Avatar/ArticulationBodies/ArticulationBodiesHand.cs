@@ -134,9 +134,22 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
             {
                 foreach (var (bone, index) in finger.BonesList.WithIndex())
                 {
-                    string boneNameY = bone.Root.name + ".RotationY";
-                    string boneNameX = bone.Root.name + ".RotationX";
-                    string boneNameZ = bone.Root.name + ".RotationZ";
+                    string boneNameY = bone.Root.name;
+                    string boneNameX = bone.Root.name;
+                    string boneNameZ = bone.Root.name;
+
+                    if (IsStrongFingerBone(index, finger.BonesList.Count))
+                    {
+                        boneNameY += ".StrongRotationY";
+                        boneNameX += ".StrongRotationX";
+                        boneNameZ += ".StrongRotationZ";
+                    }
+                    else
+                    {
+                        boneNameY += ".RotationY";
+                        boneNameX += ".RotationX";
+                        boneNameZ += ".RotationZ";
+                    }
 
                     Vector3 defaultBonePosition = new Vector3(
                         bone.Root.localPosition.x,
@@ -446,7 +459,7 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
             {
                 ArticulationBody articulationBodyZ = SetupBoneRevoluteRotationArticulationBody(FingerBoneTransformDict[boneNameZ].gameObject, true);
             }
-            else if (boneIndex == 0 && boneslistCount > 3)
+            else if (IsStrongFingerBone(boneIndex, boneslistCount))
             {
                 ArticulationBody articulationBodyY = SetupBoneRevoluteRotationArticulationBody(FingerBoneTransformDict[boneNameY].gameObject, false, true);
                 articulationBodyY.mass = ArticulationBodiesConfiguration.Root.Mass;
@@ -476,7 +489,7 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
             // }
         }
 
-        ArticulationBody SetupBoneRevoluteRotationArticulationBody(GameObject boneGameObject, bool isSingleAxis = false, bool isFourthAndAbove = false)
+        ArticulationBody SetupBoneRevoluteRotationArticulationBody(GameObject boneGameObject, bool isSingleAxis = false, bool isStrong = false)
         {
             ArticulationBody articulationBody = SetupArticulationBodyComponent(boneGameObject);
 
@@ -488,7 +501,7 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
             }
             else
             {
-                if (isFourthAndAbove)
+                if (isStrong)
                 {
                     SetupAllAxesRevoluteArticulationJoint(articulationBody, articulationBodiesConfiguration.FingerBone.StrongRotationDrives);
                 }
@@ -654,7 +667,14 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
                 {
                     SetupArticulationBodyConfiguration(articulationBody, ArticulationBodiesConfiguration.FingerBone);
 
-                    SetupRevoluteArticulationJoint(articulationBody, ArticulationBodiesConfiguration.FingerBone.RotationDrives);
+                    if (articulationBody.name.Contains(".Strong"))
+                    {
+                        SetupRevoluteArticulationJoint(articulationBody, ArticulationBodiesConfiguration.FingerBone.StrongRotationDrives);
+                    }
+                    else
+                    {
+                        SetupRevoluteArticulationJoint(articulationBody, ArticulationBodiesConfiguration.FingerBone.RotationDrives);
+                    }
 
                     if (articulationBody.name.EndsWith("Y") || articulationBody.name.EndsWith("X"))
                     {
@@ -662,6 +682,11 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
                     }
                 }
             }
+        }
+
+        bool IsStrongFingerBone(int boneIndex, int boneCount)
+        {
+            return boneCount - boneIndex > 2;
         }
 
         void ResetAllVelocities()
