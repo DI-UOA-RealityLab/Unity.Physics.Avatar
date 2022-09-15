@@ -1,3 +1,13 @@
+## 0.0.6 (2022-09-15)
+
+#### Fixes
+
+* **fix:** Fix StrongRotationDrives
+  > There was a bug in the way the StrongRotationsDrives were updated in real-time when the configurations was changing. Now this is fixed and the respective code has been improved.
+
+* **fix:** Fix physics button functionality
+  > The button after the update to the latest version has stopped working properly. This was due to some changes in Unity PhysX and how it handles the properties of ConfigurableJoints. The parameters have been tweaked to fix the button behavior. For the same reasons, the reset on physics objects upon pressing the button was broken and this has also been fixed by changing the respective script.
+
 ## 0.0.5 (2022-07-12)
 
 #### Features
