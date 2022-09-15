@@ -1,8 +1,8 @@
 
 namespace NKUA.DI.RealityLab.Physics.Interactables
 {
+    using System.Collections.Generic;
     using UnityEngine;
-    using UnityEngine.Events;
 
     public class PhysicsButton : MonoBehaviour
     {
@@ -10,7 +10,7 @@ namespace NKUA.DI.RealityLab.Physics.Interactables
         public Transform Target;
         public float PressedThreshold = 0.001f;
         public float ReleasedThreshold = 0.01f;
-        public UnityEvent OnButtonPressed;
+        public List<ResetPhysicsObject> ObjectsToResetOnButtonPress;
 
         Vector3 MovableOldPosition;
         bool IsPressed;
@@ -31,7 +31,11 @@ namespace NKUA.DI.RealityLab.Physics.Interactables
             {
                 if (!IsPressed)
                 {
-                    OnButtonPressed.Invoke();
+                    foreach (ResetPhysicsObject rpo in ObjectsToResetOnButtonPress)
+                    {
+                        rpo.ResetTransform();
+                    }
+
                     IsPressed = true;
                 }
             }

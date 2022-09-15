@@ -9,6 +9,7 @@ namespace NKUA.DI.RealityLab.Physics
         Rigidbody RigidbodyComponent;
         Vector3 StartingPosition;
         Vector3 StartingRotation;
+        bool PerformReset;
 
         void Start()
         {
@@ -21,22 +22,32 @@ namespace NKUA.DI.RealityLab.Physics
 
         public void ResetTransform()
         {
-            bool isKinematicOn = false;
-            if (RigidbodyComponent.isKinematic)
-            {
-                isKinematicOn = true;
-            }
-            else
-            {
-                RigidbodyComponent.isKinematic = true;
-            }
+            PerformReset = true;
+        }
 
-            RigidbodyComponent.transform.position = StartingPosition.GetNewVector3();
-            RigidbodyComponent.transform.rotation = Quaternion.Euler(StartingRotation.GetNewVector3());
-
-            if (!isKinematicOn)
+        void FixedUpdate()
+        {
+            if (PerformReset)
             {
-                RigidbodyComponent.isKinematic = false;
+                bool isKinematicOn = false;
+                if (RigidbodyComponent.isKinematic)
+                {
+                    isKinematicOn = true;
+                }
+                else
+                {
+                    RigidbodyComponent.isKinematic = true;
+                }
+
+                RigidbodyComponent.transform.position = StartingPosition.GetNewVector3();
+                RigidbodyComponent.transform.rotation = Quaternion.Euler(StartingRotation.GetNewVector3());
+
+                if (!isKinematicOn)
+                {
+                    RigidbodyComponent.isKinematic = false;
+                }
+
+                PerformReset = false;
             }
         }
     }
