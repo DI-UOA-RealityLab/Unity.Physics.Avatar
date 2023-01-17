@@ -39,6 +39,20 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
             }
         }
 
+        void Update()
+        {
+            if (ArticulationBody.transform.localScale.x != Target.localScale.x ||
+                ArticulationBody.transform.localScale.y != Target.localScale.y ||
+                ArticulationBody.transform.localScale.z != Target.localScale.z)
+            {
+                ArticulationBody.transform.localScale = new Vector3(
+                    Target.localScale.x,
+                    Target.localScale.y,
+                    Target.localScale.z
+                );
+            }
+        }
+
         void FixedUpdate()
         {
             if (XAxisPositionBody || YAxisPositionBody || ZAxisPositionBody)

@@ -65,6 +65,20 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
             ArticulationBodiesConfiguration.OnConfigurationChange.RemoveListener(ChangeConfiguration);
         }
 
+        void Update()
+        {
+            if (AnimatedHandModel.transform.localScale.x != CloneHandWithPhysics.transform.localScale.x ||
+                AnimatedHandModel.transform.localScale.y != CloneHandWithPhysics.transform.localScale.y ||
+                AnimatedHandModel.transform.localScale.z != CloneHandWithPhysics.transform.localScale.z)
+            {
+                CloneHandWithPhysics.transform.localScale = new Vector3(
+                    AnimatedHandModel.transform.localScale.x,
+                    AnimatedHandModel.transform.localScale.y,
+                    AnimatedHandModel.transform.localScale.z
+                );
+            }
+        }
+
         void FixedUpdate()
         {
             StabilizeHand();
