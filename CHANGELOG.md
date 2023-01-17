@@ -1,3 +1,18 @@
+## 0.0.6 (2023-01-17)
+
+#### Features
+
+* **feature:** Add scale updating of the hand on runtime
+  > Until now the scale of the hand remained the same during runtime so changes to it introduced from the hand tracking input device weren't considered. This has changed and on Update every bone as well as the whole clonde hand itself are getting checked for changes in the scale.
+
+#### Improvements
+
+* **improvement:** Change joint properties to make it easier to be pushed
+  > The sample physics button included with the library got updated with some changes in its properties to achieve a more realistic behavior.
+
+* **improvement:** Update the proposed sample configuration
+  > The configuration contained for the physics hand has been updated to provide a better starting point.
+
 ## 0.0.6 (2022-09-15)
 
 #### Fixes
