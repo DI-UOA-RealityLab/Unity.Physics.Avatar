@@ -48,13 +48,13 @@ MonoBehaviour:
       Damping: 0
       ForceLimit: 0
     RotationDrives:
-      Stiffness: 5000
-      Damping: 50
-      ForceLimit: 35
+      Stiffness: 10000
+      Damping: 10
+      ForceLimit: 250
     StrongRotationDrives:
-      Stiffness: 5000
-      Damping: 50
-      ForceLimit: 45
+      Stiffness: 10000
+      Damping: 10
+      ForceLimit: 350
   MaxLinearVelocity: 2
   MaxAngularVelocity: 1
   MaxDepenetrationVelocity: 1
