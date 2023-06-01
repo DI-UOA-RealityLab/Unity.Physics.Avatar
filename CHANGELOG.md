@@ -1,4 +1,14 @@
-## 0.0.6 (2023-01-17)
+## 0.0.8 (2023-06-01)
+
+#### Fixes
+
+* **fix:** Fix finger rotation issue
+  > There was a bug related with finger rotations. The problem was that the finger bone rotations that stay unchanged, such as the Y and X axes of the the distal and intermidiate phalanges, if changed during runtime after the initialization of the physics hand, the changes weren't reflected on the physics hand. This resulted to wrong finger rotations. To solve this a check was added to the ArticulationBodyFollower script so that the parent anchor rotation gets tweaked appropriately to matcht the change.
+
+* **fix:** Refactor and improve code
+  > The code of the ArticulationBodyFollower scripted was refactored to be more readable and maintanable. Also some unecessary instantiations of objects were removed and replaced by the value itself (e.g. new Vector3).
+
+## 0.0.7 (2023-01-17)
 
 #### Features
 
