@@ -24,128 +24,176 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
         public bool RotateUsingParentAnchor;
 
         Vector3 StartingPosition, PositionDelta;
-        Vector3 RotationDelta, StartingRotation;
+        Vector3 RotationDelta, StartingRotation, PreviousParentAnchorRotation;
         float CurrentAngleInRange;
         float CurrentAngleDifferenceInRange;
         int OperationSign = 1;
 
         void Start()
         {
-            StartingPosition = transform.position;
-
-            if (!UseWorldRotation)
-            {
-                StartingRotation = Target.localRotation.eulerAngles;
-            }
+            SetStartingPositionAndRotation();
         }
 
         void Update()
         {
-            if (ArticulationBody.transform.localScale.x != Target.localScale.x ||
-                ArticulationBody.transform.localScale.y != Target.localScale.y ||
-                ArticulationBody.transform.localScale.z != Target.localScale.z)
-            {
-                ArticulationBody.transform.localScale = new Vector3(
-                    Target.localScale.x,
-                    Target.localScale.y,
-                    Target.localScale.z
-                );
-            }
+            UpdateArticulationBodyScale();
         }
 
         void FixedUpdate()
+        {
+            UpdatePositionBodies();
+
+            UpdateRotationBodies();
+        }
+
+        void SetStartingPositionAndRotation()
+        {
+            StartingPosition = transform.position;
+            StartingRotation = Target.localRotation.eulerAngles;
+
+            PreviousParentAnchorRotation = ArticulationBody.parentAnchorRotation.eulerAngles;
+        }
+
+        void UpdateArticulationBodyScale()
+        {
+            if (ArticulationBody.transform.localScale != Target.localScale)
+            {
+                ArticulationBody.transform.localScale = Target.localScale;
+            }
+        }
+
+        void UpdatePositionBodies()
         {
             if (XAxisPositionBody || YAxisPositionBody || ZAxisPositionBody)
             {
                 PositionDelta = Target.position - StartingPosition;
             }
 
-            if (XAxisPositionBody)
-            {
-                // set joint Drive of X axis to new position
-                var xDrive = XAxisPositionBody.xDrive;
-                xDrive.target = PositionDelta.x;
-                XAxisPositionBody.xDrive = xDrive;
-            }
+            SetArticulationBodyXDrive(XAxisPositionBody, PositionDelta.x);
+            SetArticulationBodyYDrive(YAxisPositionBody, PositionDelta.y);
+            SetArticulationBodyZDrive(ZAxisPositionBody, PositionDelta.z);
+        }
 
-            if (YAxisPositionBody)
+        void UpdateRotationBodies()
+        {
+            if (RotateUsingParentAnchor)
             {
-                // set joint Drive of Y axis to new position
-                var yDrive = YAxisPositionBody.yDrive;
-                yDrive.target = PositionDelta.y;
-                YAxisPositionBody.yDrive = yDrive;
-            }
+                ArticulationBody.parentAnchorRotation = Target.rotation;
 
-            if (ZAxisPositionBody)
-            {
-                // set joint Drive of Z axis to new position
-                var zDrive = ZAxisPositionBody.zDrive;
-                zDrive.target = PositionDelta.z;
-                ZAxisPositionBody.zDrive = zDrive;
+                return;
             }
 
             if (YAxisRotationBody || XAxisRotationBody || ZAxisRotationBody || AllAxesRotationBody)
             {
-                if (UseWorldRotation)
-                {
-                    RotationDelta = Target.rotation.eulerAngles;
-                }
-                else
-                {
-                    RotationDelta = new Vector3(
-                        Target.localRotation.eulerAngles.x - StartingRotation.x,
-                        Target.localRotation.eulerAngles.y - StartingRotation.y,
-                        Target.localRotation.eulerAngles.z - StartingRotation.z
-                    );
-                }
+                RotationDelta = UseWorldRotation ? Target.rotation.eulerAngles : Target.localRotation.eulerAngles - StartingRotation;
+            }
+            else
+            {
+                return;
+            }
+
+            if (AllAxesRotationBody)
+            {
+                SetArticulationBodyYDrive(AllAxesRotationBody, FixAngleJump(AllAxesRotationBody.yDrive, RotationDelta.y, AllAxesRotationBody.yDrive.target));
+                SetArticulationBodyXDrive(AllAxesRotationBody, FixAngleJump(AllAxesRotationBody.xDrive, RotationDelta.x, AllAxesRotationBody.xDrive.target));
+                SetArticulationBodyZDrive(AllAxesRotationBody, FixAngleJump(AllAxesRotationBody.zDrive, RotationDelta.z, AllAxesRotationBody.zDrive.target));
+
+                return;
             }
 
             // The axes have to be rotated in a specific order to work properly: Y->X->Z
             if (YAxisRotationBody)
             {
-                // set joint Drive to new rotation
-                var xDrive = YAxisRotationBody.xDrive;
-                xDrive.target = FixAngleJump(xDrive, YAxisRotationBody.twistLock, RotationDelta.y, xDrive.target);
-                YAxisRotationBody.xDrive = xDrive;
+                SetArticulationBodyXDrive(YAxisRotationBody, FixAngleJump(YAxisRotationBody.xDrive, RotationDelta.y, YAxisRotationBody.xDrive.target));
+            }
+            else
+            {
+                if (transform.localRotation.eulerAngles.y != Target.localRotation.eulerAngles.y)
+                {
+                    AdjustParentAnchorRotation(Quaternion.Euler(
+                        PreviousParentAnchorRotation.x,
+                        PreviousParentAnchorRotation.y +
+                        (Target.localRotation.eulerAngles.y - transform.localRotation.eulerAngles.y),
+                        PreviousParentAnchorRotation.z
+                    ));
+                }
             }
 
             if (XAxisRotationBody)
             {
-                // set joint Drive to new rotation
-                var xDrive = XAxisRotationBody.xDrive;
-                xDrive.target = FixAngleJump(xDrive, XAxisRotationBody.twistLock, RotationDelta.x, xDrive.target);
-                XAxisRotationBody.xDrive = xDrive;
+                SetArticulationBodyXDrive(XAxisRotationBody, FixAngleJump(XAxisRotationBody.xDrive, RotationDelta.x, XAxisRotationBody.xDrive.target));
+            }
+            else
+            {
+                if (transform.localRotation.eulerAngles.x != Target.localRotation.eulerAngles.x)
+                {
+                    AdjustParentAnchorRotation(Quaternion.Euler(
+                        PreviousParentAnchorRotation.x,
+                        PreviousParentAnchorRotation.y,
+                        PreviousParentAnchorRotation.z  +
+                        (Target.localRotation.eulerAngles.x - transform.localRotation.eulerAngles.x)
+                    ));
+                }
             }
 
             if (ZAxisRotationBody)
             {
-                // set joint Drive to new rotation
-                var xDrive = ZAxisRotationBody.xDrive;
-                xDrive.target = FixAngleJump(xDrive, ZAxisRotationBody.twistLock, RotationDelta.z, xDrive.target);
-                ZAxisRotationBody.xDrive = xDrive;
+                SetArticulationBodyXDrive(ZAxisRotationBody, FixAngleJump(ZAxisRotationBody.xDrive, RotationDelta.z, ZAxisRotationBody.xDrive.target));
             }
-
-            if (RotateUsingParentAnchor)
+            else
             {
-                ArticulationBody.parentAnchorRotation = Target.rotation;
-            }
-            else if (AllAxesRotationBody)
-            {
-                var yDrive = AllAxesRotationBody.yDrive;
-                yDrive.target = FixAngleJump(yDrive, AllAxesRotationBody.swingYLock, RotationDelta.y, yDrive.target);
-                AllAxesRotationBody.yDrive = yDrive;
-
-                var zDrive = AllAxesRotationBody.zDrive;
-                zDrive.target = FixAngleJump(zDrive, AllAxesRotationBody.swingZLock, RotationDelta.z, zDrive.target);
-                AllAxesRotationBody.zDrive = zDrive;
-
-                var xDrive = AllAxesRotationBody.xDrive;
-                xDrive.target = FixAngleJump(xDrive, AllAxesRotationBody.twistLock, RotationDelta.x, xDrive.target);
-                AllAxesRotationBody.xDrive = xDrive;
+                if (transform.localRotation.eulerAngles.z != Target.localRotation.eulerAngles.z)
+                {
+                    AdjustParentAnchorRotation(Quaternion.Euler(
+                        PreviousParentAnchorRotation.x  +
+                        (Target.localRotation.eulerAngles.z - transform.localRotation.eulerAngles.z),
+                        PreviousParentAnchorRotation.y,
+                        PreviousParentAnchorRotation.z
+                    ));
+                }
             }
         }
 
-        float FixAngleJump(ArticulationDrive drive, ArticulationDofLock dofLock, float targetAngleInRange, float currentAngle)
+        void SetArticulationBodyXDrive(ArticulationBody ab, float targetValue)
+        {
+            if (ab)
+            {
+                var xDrive = ab.xDrive;
+                xDrive.target = targetValue;
+                ab.xDrive = xDrive;
+            }
+        }
+
+        void SetArticulationBodyYDrive(ArticulationBody ab, float targetValue)
+        {
+            if (ab)
+            {
+                var yDrive = ab.yDrive;
+                yDrive.target = targetValue;
+                ab.yDrive = yDrive;
+            }
+        }
+
+        void SetArticulationBodyZDrive(ArticulationBody ab, float targetValue)
+        {
+            if (ab)
+            {
+                var zDrive = ab.zDrive;
+                zDrive.target = targetValue;
+                ab.zDrive = zDrive;
+            }
+        }
+
+        void AdjustParentAnchorRotation(Quaternion newRotation)
+        {
+            ArticulationBody.matchAnchors = false;
+
+            ArticulationBody.parentAnchorRotation = newRotation;
+
+            PreviousParentAnchorRotation = ArticulationBody.parentAnchorRotation.eulerAngles;
+        }
+
+        float FixAngleJump(ArticulationDrive drive, float targetAngleInRange, float currentAngle)
         {
             CurrentAngleInRange = currentAngle % 360f;
             if (CurrentAngleInRange < 0)
