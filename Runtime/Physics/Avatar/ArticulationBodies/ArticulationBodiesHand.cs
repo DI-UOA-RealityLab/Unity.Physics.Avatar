@@ -253,19 +253,37 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
             }
 
             HandColliders = Hand.Palm.Root.parent.GetComponentsInChildren<Collider>();
-            foreach (Collider collider in HandColliders)
+
+            if (ArticulationBodiesConfiguration.DisableFingerToPalmCollision)
             {
-                collider.material = ArticulationBodiesConfiguration.HandPhysicMaterial;
-
-                Physics.IgnoreCollision(Hand.Palm.Collider, collider, true);
-
-                if (Hand.Palm.MeshCollider)
+                foreach (Collider collider in HandColliders)
                 {
-                    Physics.IgnoreCollision(Hand.Palm.MeshCollider, collider, true);
+                    collider.material = ArticulationBodiesConfiguration.HandPhysicMaterial;
+
+                    Physics.IgnoreCollision(Hand.Palm.Collider, collider, true);
+
+                    if (Hand.Palm.MeshCollider)
+                    {
+                        Physics.IgnoreCollision(Hand.Palm.MeshCollider, collider, true);
+                    }
                 }
             }
 
-            if (articulationBodiesConfiguration.AddFakeColliders)
+            if (ArticulationBodiesConfiguration.DisableFingerToFingerCollision)
+            {
+                for (int i = 0; i < HandColliders.Length - 1; i++)
+                {
+                    for (int j = i + 1; j < HandColliders.Length; j++)
+                    {
+                        Collider colliderA = HandColliders[i];
+                        Collider colliderB = HandColliders[j];
+
+                        Physics.IgnoreCollision(colliderA, colliderB, true);
+                    }
+                }
+            }
+
+            if (ArticulationBodiesConfiguration.AddFakeColliders)
             {
                 foreach (ArticulationBody ab in ArticulationBodiesList)
                 {
@@ -274,7 +292,7 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
                         SphereCollider sc = ab.gameObject.AddComponent<SphereCollider>();
                         sc.radius = 0.005f;
 
-                        ab.gameObject.layer = (int) Mathf.Log(articulationBodiesConfiguration.NoCollisionLayer.value, 2);
+                        ab.gameObject.layer = (int) Mathf.Log(ArticulationBodiesConfiguration.NoCollisionLayer.value, 2);
                     }
                 }
             }
@@ -363,8 +381,8 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
             SetupArticulationBodyConfiguration(articulationBody, ArticulationBodiesConfiguration.Palm);
             SetupBaseArticulationBodyConfiguration(articulationBody, ArticulationBodiesConfiguration.Root);
 
-            // SetupAllAxesRevoluteArticulationJoint(articulationBody, articulationBodiesConfiguration.FingerBone.RotationDrives);
-            SetupAllAxesRevoluteArticulationJoint(articulationBody, articulationBodiesConfiguration.Palm.RotationDrives);
+            // SetupAllAxesRevoluteArticulationJoint(articulationBody, ArticulationBodiesConfiguration.FingerBone.RotationDrives);
+            SetupAllAxesRevoluteArticulationJoint(articulationBody, ArticulationBodiesConfiguration.Palm.RotationDrives);
         }
 
         void SetupPrismaticArticulationJoint(ArticulationBody articulationBody, ArticulationDriveConfiguration articulationDriveConfiguration)
@@ -511,17 +529,17 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
 
             if (isSingleAxis)
             {
-                SetupSingleAxisRevoluteArticulationJoint(articulationBody, articulationBodiesConfiguration.FingerBone.RotationDrives);
+                SetupSingleAxisRevoluteArticulationJoint(articulationBody, ArticulationBodiesConfiguration.FingerBone.RotationDrives);
             }
             else
             {
                 if (isStrong)
                 {
-                    SetupAllAxesRevoluteArticulationJoint(articulationBody, articulationBodiesConfiguration.FingerBone.StrongRotationDrives);
+                    SetupAllAxesRevoluteArticulationJoint(articulationBody, ArticulationBodiesConfiguration.FingerBone.StrongRotationDrives);
                 }
                 else
                 {
-                    SetupAllAxesRevoluteArticulationJoint(articulationBody, articulationBodiesConfiguration.FingerBone.RotationDrives);
+                    SetupAllAxesRevoluteArticulationJoint(articulationBody, ArticulationBodiesConfiguration.FingerBone.RotationDrives);
                 }
             }
 
@@ -670,7 +688,7 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
                     SetupArticulationBodyConfiguration(articulationBody, ArticulationBodiesConfiguration.Palm);
                     SetupBaseArticulationBodyConfiguration(articulationBody, ArticulationBodiesConfiguration.Root);
 
-                    SetupAllAxesRevoluteArticulationJoint(articulationBody, articulationBodiesConfiguration.Palm.RotationDrives);
+                    SetupAllAxesRevoluteArticulationJoint(articulationBody, ArticulationBodiesConfiguration.Palm.RotationDrives);
 
                     if (articulationBody.name.EndsWith("Z"))
                     {
@@ -722,10 +740,10 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
 
             foreach (ArticulationBody body in ArticulationBodiesList)
             {
-                // if(body.velocity.magnitude > articulationBodiesConfiguration.MaxLinearVelocity)
+                // if(body.velocity.magnitude > ArticulationBodiesConfiguration.MaxLinearVelocity)
                 //     Debug.Log(body.name + " velocity magnitude: " + body.velocity.magnitude);
-                if (body.velocity.magnitude > articulationBodiesConfiguration.MaxLinearVelocity ||
-                    body.angularVelocity.magnitude > articulationBodiesConfiguration.MaxAngularVelocity)
+                if (body.velocity.magnitude > ArticulationBodiesConfiguration.MaxLinearVelocity ||
+                    body.angularVelocity.magnitude > ArticulationBodiesConfiguration.MaxAngularVelocity)
                 {
                     PerformBodyReset(body);
                 }

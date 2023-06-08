@@ -17,6 +17,8 @@ MonoBehaviour:
     Mass: 0.0000001
     CollisionDetectionMode: 3
   UseWristAnchorRotation: 1
+  DisableFingerToPalmCollision: 1
+  DisableFingerToFingerCollision: 1
   AddFakeColliders: 0
   NoCollisionLayer:
     serializedVersion: 2
@@ -48,13 +50,13 @@ MonoBehaviour:
       Damping: 0
       ForceLimit: 0
     RotationDrives:
-      Stiffness: 10000
-      Damping: 10
-      ForceLimit: 250
+      Stiffness: 5000
+      Damping: 50
+      ForceLimit: 1000
     StrongRotationDrives:
-      Stiffness: 10000
-      Damping: 10
-      ForceLimit: 350
+      Stiffness: 5000
+      Damping: 50
+      ForceLimit: 1000
   MaxLinearVelocity: 2
   MaxAngularVelocity: 1
   MaxDepenetrationVelocity: 1

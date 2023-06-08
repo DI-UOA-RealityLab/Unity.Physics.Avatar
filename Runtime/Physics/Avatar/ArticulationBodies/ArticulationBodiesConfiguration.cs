@@ -11,6 +11,8 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
         [Header("Articulation Bodies")]
         public ArticulationBodyBaseConfiguration Root;
         public bool UseWristAnchorRotation;
+        public bool DisableFingerToPalmCollision;
+        public bool DisableFingerToFingerCollision;
         public bool AddFakeColliders;
         public LayerMask NoCollisionLayer;
         public ArticulationBodyConfiguration Palm;
