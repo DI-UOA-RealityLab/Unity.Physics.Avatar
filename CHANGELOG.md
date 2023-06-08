@@ -1,3 +1,10 @@
+## 0.0.9 (2023-06-08)
+
+#### Features
+
+* **feature:** Add option to disable hand's finger collisions
+  > The option to disable hand's finger collisions was added, similarily to how the hand's fingers ignored collisions with the palm. Now both of these two options are optional and can be set using the configuration settings. The basic configuration was updated appropriately.
+
 ## 0.0.8 (2023-06-01)
 
 #### Fixes
