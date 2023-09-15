@@ -3,7 +3,6 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
 {
     using System.Collections.Generic;
     using UnityEngine;
-    using UnityEditor;
 
     public class ArticulationBodiesHand : MonoBehaviour
     {
@@ -65,23 +64,11 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
             ArticulationBodiesConfiguration.OnConfigurationChange.RemoveListener(ChangeConfiguration);
         }
 
-        void Update()
-        {
-            if (AnimatedHandModel.transform.localScale.x != CloneHandWithPhysics.transform.localScale.x ||
-                AnimatedHandModel.transform.localScale.y != CloneHandWithPhysics.transform.localScale.y ||
-                AnimatedHandModel.transform.localScale.z != CloneHandWithPhysics.transform.localScale.z)
-            {
-                CloneHandWithPhysics.transform.localScale = new Vector3(
-                    AnimatedHandModel.transform.localScale.x,
-                    AnimatedHandModel.transform.localScale.y,
-                    AnimatedHandModel.transform.localScale.z
-                );
-            }
-        }
-
         void FixedUpdate()
         {
             StabilizeHand();
+
+            DetectScaleChange();
         }
 
         void SetupHand()
@@ -746,6 +733,37 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
                     body.angularVelocity.magnitude > ArticulationBodiesConfiguration.MaxAngularVelocity)
                 {
                     PerformBodyReset(body);
+                }
+            }
+        }
+
+        void DetectScaleChange()
+        {
+            if (AnimatedHandModel.transform.localScale.x != CloneHandWithPhysics.transform.localScale.x ||
+                AnimatedHandModel.transform.localScale.y != CloneHandWithPhysics.transform.localScale.y ||
+                AnimatedHandModel.transform.localScale.z != CloneHandWithPhysics.transform.localScale.z)
+            {
+                CloneHandWithPhysics.transform.localScale = AnimatedHandModel.transform.localScale;
+
+                Queue<Transform> q = new Queue<Transform>();
+                q.Enqueue(RootArticulationBody.transform);
+                while(q.Count > 0)
+                {
+                    Transform current = q.Dequeue();
+                    if(current == null)
+                        continue;
+
+                    foreach (Transform t in current)
+                    {
+                        q.Enqueue(t);
+
+                        ArticulationBodyFollower abf = t.GetComponent<ArticulationBodyFollower>();
+
+                        if (abf)
+                        {
+                            abf.UpdateParentAnchorPositionOnRescale();
+                        }
+                    }
                 }
             }
         }

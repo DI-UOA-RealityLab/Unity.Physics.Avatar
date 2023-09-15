@@ -1,6 +1,7 @@
 
 namespace NKUA.DI.RealityLab.Physics.Avatar
 {
+    using System.Collections;
     using UnityEngine;
 
     public class ArticulationBodyFollower : MonoBehaviour
@@ -24,7 +25,7 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
         public bool RotateUsingParentAnchor;
 
         Vector3 StartingPosition, PositionDelta;
-        Vector3 RotationDelta, StartingRotation, PreviousParentAnchorRotation;
+        Vector3 StartingRotation, RotationDelta, PreviousParentAnchorRotation;
         float CurrentAngleInRange;
         float CurrentAngleDifferenceInRange;
         int OperationSign = 1;
@@ -184,6 +185,20 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
             }
         }
 
+        void AdjustParentAnchorPosition(ArticulationBody ab)
+        {
+            ab.matchAnchors = false;
+
+            Vector3 newParentAnchorPosition = Target.localPosition;
+
+            if (!ab.transform.parent.GetComponent<ArticulationBody>())
+            {
+                newParentAnchorPosition += Target.parent.localPosition;
+            }
+
+            ab.parentAnchorPosition = newParentAnchorPosition;
+        }
+
         void AdjustParentAnchorRotation(Quaternion newRotation)
         {
             ArticulationBody.matchAnchors = false;
@@ -239,6 +254,30 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
             currentAngle += (float)OperationSign * CurrentAngleDifferenceInRange;
 
             return currentAngle;
+        }
+
+        public void UpdateParentAnchorPositionOnRescale()
+        {
+            if (YAxisRotationBody)
+            {
+                AdjustParentAnchorPosition(YAxisRotationBody);
+
+                YAxisRotationBody.parentAnchorRotation = Quaternion.Euler(
+                    YAxisRotationBody.anchorRotation.eulerAngles.x,
+                    Target.localRotation.eulerAngles.y,
+                    YAxisRotationBody.anchorRotation.eulerAngles.z
+                );
+            }
+            else if (ZAxisRotationBody)
+            {
+                AdjustParentAnchorPosition(ZAxisRotationBody);
+
+                ZAxisRotationBody.parentAnchorRotation = Quaternion.Euler(
+                    ZAxisRotationBody.anchorRotation.eulerAngles.x,
+                    ZAxisRotationBody.anchorRotation.eulerAngles.y,
+                    Target.localRotation.eulerAngles.z
+                );
+            }
         }
     }
 }
