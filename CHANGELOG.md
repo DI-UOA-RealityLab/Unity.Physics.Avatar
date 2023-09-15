@@ -1,3 +1,10 @@
+## 0.0.11 (2023-09-15)
+
+#### Improvements
+
+* **improvement:** Improve hand scaling functionality
+  > The previous version expected the scale change only on the top level. This now has changed and scale change on any level of the hierarchy is supported.
+
 ## 0.0.10 (2023-09-15)
 
 #### Fixes

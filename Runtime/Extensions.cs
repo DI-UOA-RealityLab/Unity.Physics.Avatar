@@ -36,6 +36,25 @@ namespace NKUA.DI.RealityLab
             return null;
         }
 
+        public static void RunForAllChildrenHierarchicaly(this Transform root, Action<Transform> action)
+        {
+                Queue<Transform> q = new Queue<Transform>();
+                q.Enqueue(root);
+                while(q.Count > 0)
+                {
+                    Transform current = q.Dequeue();
+                    if(current == null)
+                        continue;
+
+                    foreach (Transform t in current)
+                    {
+                        q.Enqueue(t);
+
+                        action(t);
+                    }
+                }
+        }
+
         public static void ResetLocalPosition(this Transform gameObjectTransform)
         {
             gameObjectTransform.localPosition = Vector3.zero;

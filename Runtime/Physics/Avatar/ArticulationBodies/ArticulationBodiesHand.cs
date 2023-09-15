@@ -739,32 +739,39 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
 
         void DetectScaleChange()
         {
-            if (AnimatedHandModel.transform.localScale.x != CloneHandWithPhysics.transform.localScale.x ||
-                AnimatedHandModel.transform.localScale.y != CloneHandWithPhysics.transform.localScale.y ||
-                AnimatedHandModel.transform.localScale.z != CloneHandWithPhysics.transform.localScale.z)
+            if (AnimatedHandModel.transform.localScale != CloneHandWithPhysics.transform.localScale)
             {
                 CloneHandWithPhysics.transform.localScale = AnimatedHandModel.transform.localScale;
 
-                Queue<Transform> q = new Queue<Transform>();
-                q.Enqueue(RootArticulationBody.transform);
-                while(q.Count > 0)
+                RootArticulationBody.transform.RunForAllChildrenHierarchicaly(t =>
                 {
-                    Transform current = q.Dequeue();
-                    if(current == null)
-                        continue;
+                    ArticulationBodyFollower abf = t.GetComponent<ArticulationBodyFollower>();
 
-                    foreach (Transform t in current)
+                    if (abf)
                     {
-                        q.Enqueue(t);
-
-                        ArticulationBodyFollower abf = t.GetComponent<ArticulationBodyFollower>();
-
-                        if (abf)
-                        {
-                            abf.UpdateParentAnchorPositionOnRescale();
-                        }
+                        abf.UpdateParentAnchorPositionOnRescale();
                     }
-                }
+                });
+                // Queue<Transform> q = new Queue<Transform>();
+                // q.Enqueue(RootArticulationBody.transform);
+                // while(q.Count > 0)
+                // {
+                //     Transform current = q.Dequeue();
+                //     if(current == null)
+                //         continue;
+
+                //     foreach (Transform t in current)
+                //     {
+                //         q.Enqueue(t);
+
+                //         ArticulationBodyFollower abf = t.GetComponent<ArticulationBodyFollower>();
+
+                //         if (abf)
+                //         {
+                //             abf.UpdateParentAnchorPositionOnRescale();
+                //         }
+                //     }
+                // }
             }
         }
 

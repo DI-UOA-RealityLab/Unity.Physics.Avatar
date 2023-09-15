@@ -60,6 +60,16 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
             if (ArticulationBody.transform.localScale != Target.localScale)
             {
                 ArticulationBody.transform.localScale = Target.localScale;
+
+                ArticulationBody.transform.transform.RunForAllChildrenHierarchicaly(t =>
+                {
+                    ArticulationBodyFollower abf = t.GetComponent<ArticulationBodyFollower>();
+
+                    if (abf)
+                    {
+                        abf.UpdateParentAnchorPositionOnRescale();
+                    }
+                });
             }
         }
 
