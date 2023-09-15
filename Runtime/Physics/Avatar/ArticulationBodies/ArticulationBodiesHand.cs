@@ -752,26 +752,6 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
                         abf.UpdateParentAnchorPositionOnRescale();
                     }
                 });
-                // Queue<Transform> q = new Queue<Transform>();
-                // q.Enqueue(RootArticulationBody.transform);
-                // while(q.Count > 0)
-                // {
-                //     Transform current = q.Dequeue();
-                //     if(current == null)
-                //         continue;
-
-                //     foreach (Transform t in current)
-                //     {
-                //         q.Enqueue(t);
-
-                //         ArticulationBodyFollower abf = t.GetComponent<ArticulationBodyFollower>();
-
-                //         if (abf)
-                //         {
-                //             abf.UpdateParentAnchorPositionOnRescale();
-                //         }
-                //     }
-                // }
             }
         }
 
