@@ -1874,9 +1874,9 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.008
-  m_Height: 0.02
+  m_Height: 0.011908757
   m_Direction: 0
-  m_Center: {x: 0.01, y: 0, z: 0}
+  m_Center: {x: 0.0059543783, y: 0, z: 0}
 --- !u!4 &556914766 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4524810560304764, guid: c6a74181d4000004887343fb87b3c53a, type: 3}
@@ -2622,11 +2622,16 @@ MonoBehaviour:
         width: 0.008
         shape: 1
         collider: {fileID: 1621388727}
-    - root: {fileID: 792882145}
+    - root: {fileID: 1445597101}
       type: 4
       defaultBoneWidth: 0.008
       defaultBoneShape: 1
       bonesList:
+      - root: {fileID: 1445597101}
+        length: 0.04565055
+        width: 0.008
+        shape: 1
+        collider: {fileID: 1445597102}
       - root: {fileID: 792882145}
         length: 0.030720407
         width: 0.008
@@ -4769,9 +4774,9 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.008
-  m_Height: 0.02
+  m_Height: 0.011908757
   m_Direction: 0
-  m_Center: {x: -0.01, y: 0, z: 0}
+  m_Center: {x: -0.0059543783, y: 0, z: 0}
 --- !u!1 &1418619787
 GameObject:
   m_ObjectHideFlags: 0
@@ -4817,6 +4822,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1445597101}
+  - component: {fileID: 1445597102}
   m_Layer: 0
   m_Name: b_r_pinky0
   m_TagString: Untagged
@@ -4840,6 +4846,20 @@ Transform:
   m_Father: {fileID: 1241716479}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &1445597102
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1445597100}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.008
+  m_Height: 0.04565055
+  m_Direction: 0
+  m_Center: {x: 0.022825275, y: 0, z: 0}
 --- !u!1 &1448799631
 GameObject:
   m_ObjectHideFlags: 0
@@ -5141,11 +5161,16 @@ MonoBehaviour:
         width: 0.008
         shape: 1
         collider: {fileID: 1384639055}
-    - root: {fileID: 1098804172}
+    - root: {fileID: 1784125120}
       type: 4
       defaultBoneWidth: 0.008
       defaultBoneShape: 1
       bonesList:
+      - root: {fileID: 1784125120}
+        length: 0.04565055
+        width: 0.008
+        shape: 1
+        collider: {fileID: 1784125121}
       - root: {fileID: 1098804172}
         length: 0.030720407
         width: 0.008
@@ -5848,6 +5873,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1784125120}
+  - component: {fileID: 1784125121}
   m_Layer: 0
   m_Name: b_l_pinky0
   m_TagString: Untagged
@@ -5871,6 +5897,20 @@ Transform:
   m_Father: {fileID: 1942787386}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &1784125121
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1784125119}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.008
+  m_Height: 0.04565055
+  m_Direction: 0
+  m_Center: {x: -0.022825275, y: 0, z: 0}
 --- !u!1 &1788813096
 GameObject:
   m_ObjectHideFlags: 0
@@ -6221,6 +6261,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1920676025
 GameObject:
   m_ObjectHideFlags: 0
@@ -6820,6 +6861,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &2000810335
 GameObject:
   m_ObjectHideFlags: 0
