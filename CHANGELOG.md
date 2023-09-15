@@ -1,3 +1,10 @@
+## 0.0.10 (2023-09-15)
+
+#### Fixes
+
+* **fix:** Fix hand scaling functionality
+  > When the hands were using a different scale than the original, the physics hand didn't adjust appropriately. This is now fixed and the hand can be scaled on rutime to match the target hand by adjusting the parent anchors of the joints as needed. There is an issue when there is a transform in the hierarchy of joints that doesn't have an arrticulation body. Make changes to the sample scenes to reflect the aforementioned.
+
 ## 0.0.9 (2023-06-08)
 
 #### Features
