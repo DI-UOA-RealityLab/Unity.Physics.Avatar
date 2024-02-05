@@ -35,16 +35,13 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
             SetStartingPositionAndRotation();
         }
 
-        void Update()
-        {
-            UpdateArticulationBodyScale();
-        }
-
         void FixedUpdate()
         {
             UpdatePositionBodies();
 
             UpdateRotationBodies();
+
+            UpdateArticulationBodyScale();
         }
 
         void SetStartingPositionAndRotation()
@@ -61,7 +58,7 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
             {
                 ArticulationBody.transform.localScale = Target.localScale;
 
-                ArticulationBody.transform.transform.RunForAllChildrenHierarchicaly(t =>
+                ArticulationBody.transform.RunForAllChildrenHierarchicaly(t =>
                 {
                     ArticulationBodyFollower abf = t.GetComponent<ArticulationBodyFollower>();
 
@@ -117,50 +114,38 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
             {
                 SetArticulationBodyXDrive(YAxisRotationBody, FixAngleJump(YAxisRotationBody.xDrive, RotationDelta.y, YAxisRotationBody.xDrive.target));
             }
-            else
-            {
-                if (transform.localRotation.eulerAngles.y != Target.localRotation.eulerAngles.y)
-                {
-                    AdjustParentAnchorRotation(Quaternion.Euler(
-                        PreviousParentAnchorRotation.x,
-                        PreviousParentAnchorRotation.y +
-                        (Target.localRotation.eulerAngles.y - transform.localRotation.eulerAngles.y),
-                        PreviousParentAnchorRotation.z
-                    ));
-                }
-            }
 
             if (XAxisRotationBody)
             {
                 SetArticulationBodyXDrive(XAxisRotationBody, FixAngleJump(XAxisRotationBody.xDrive, RotationDelta.x, XAxisRotationBody.xDrive.target));
             }
-            else
+
+            if (ZAxisRotationBody)
             {
-                if (transform.localRotation.eulerAngles.x != Target.localRotation.eulerAngles.x)
+                SetArticulationBodyXDrive(ZAxisRotationBody, FixAngleJump(ZAxisRotationBody.xDrive, RotationDelta.z, ZAxisRotationBody.xDrive.target));
+
+                if (!YAxisRotationBody && transform.localRotation.eulerAngles.y != Target.localRotation.eulerAngles.y)
                 {
-                    AdjustParentAnchorRotation(Quaternion.Euler(
+                    AdjustParentAnchorRotation(ArticulationBody, Quaternion.Euler(
+                        PreviousParentAnchorRotation.x,
+                        PreviousParentAnchorRotation.y +
+                        (Target.localRotation.eulerAngles.y - transform.localRotation.eulerAngles.y),
+                        PreviousParentAnchorRotation.z
+                    ));
+
+                    PreviousParentAnchorRotation = ArticulationBody.parentAnchorRotation.eulerAngles;
+                }
+
+                if (!XAxisRotationBody && transform.localRotation.eulerAngles.x != Target.localRotation.eulerAngles.x)
+                {
+                    AdjustParentAnchorRotation(ArticulationBody, Quaternion.Euler(
                         PreviousParentAnchorRotation.x,
                         PreviousParentAnchorRotation.y,
                         PreviousParentAnchorRotation.z  +
                         (Target.localRotation.eulerAngles.x - transform.localRotation.eulerAngles.x)
                     ));
-                }
-            }
 
-            if (ZAxisRotationBody)
-            {
-                SetArticulationBodyXDrive(ZAxisRotationBody, FixAngleJump(ZAxisRotationBody.xDrive, RotationDelta.z, ZAxisRotationBody.xDrive.target));
-            }
-            else
-            {
-                if (transform.localRotation.eulerAngles.z != Target.localRotation.eulerAngles.z)
-                {
-                    AdjustParentAnchorRotation(Quaternion.Euler(
-                        PreviousParentAnchorRotation.x  +
-                        (Target.localRotation.eulerAngles.z - transform.localRotation.eulerAngles.z),
-                        PreviousParentAnchorRotation.y,
-                        PreviousParentAnchorRotation.z
-                    ));
+                    PreviousParentAnchorRotation = ArticulationBody.parentAnchorRotation.eulerAngles;
                 }
             }
         }
@@ -199,23 +184,17 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
         {
             ab.matchAnchors = false;
 
-            Vector3 newParentAnchorPosition = Target.localPosition;
+            ab.parentAnchorPosition = Target.localPosition;
 
-            if (!ab.transform.parent.GetComponent<ArticulationBody>())
-            {
-                newParentAnchorPosition += Target.parent.localPosition;
-            }
-
-            ab.parentAnchorPosition = newParentAnchorPosition;
+            ab.matchAnchors = true;
+            ab.matchAnchors = false;
         }
 
-        void AdjustParentAnchorRotation(Quaternion newRotation)
+        void AdjustParentAnchorRotation(ArticulationBody ab, Quaternion newRotation)
         {
-            ArticulationBody.matchAnchors = false;
+            ab.matchAnchors = false;
 
-            ArticulationBody.parentAnchorRotation = newRotation;
-
-            PreviousParentAnchorRotation = ArticulationBody.parentAnchorRotation.eulerAngles;
+            ab.parentAnchorRotation = newRotation;
         }
 
         float FixAngleJump(ArticulationDrive drive, float targetAngleInRange, float currentAngle)
@@ -272,21 +251,15 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
             {
                 AdjustParentAnchorPosition(YAxisRotationBody);
 
-                YAxisRotationBody.parentAnchorRotation = Quaternion.Euler(
-                    YAxisRotationBody.anchorRotation.eulerAngles.x,
-                    Target.localRotation.eulerAngles.y,
-                    YAxisRotationBody.anchorRotation.eulerAngles.z
-                );
+                AdjustParentAnchorRotation(YAxisRotationBody, Quaternion.Euler(0, 0, 90));
+                StartingRotation.y = ArticulationBody.transform.localRotation.eulerAngles.y;
             }
             else if (ZAxisRotationBody)
             {
                 AdjustParentAnchorPosition(ZAxisRotationBody);
 
-                ZAxisRotationBody.parentAnchorRotation = Quaternion.Euler(
-                    ZAxisRotationBody.anchorRotation.eulerAngles.x,
-                    ZAxisRotationBody.anchorRotation.eulerAngles.y,
-                    Target.localRotation.eulerAngles.z
-                );
+                StartingRotation = ArticulationBody.transform.localRotation.eulerAngles;
+                PreviousParentAnchorRotation = ArticulationBody.parentAnchorRotation.eulerAngles;
             }
         }
     }
