@@ -1,3 +1,10 @@
+## 0.0.12 (2024-02-05)
+
+#### Fixes
+
+* **fix:** Fix hand scaling functionality again
+  > The previous attempt to fix the hand scaling introduced a different set of issues. An attempt has been made to fix these issues.
+
 ## 0.0.11 (2023-09-15)
 
 #### Improvements
