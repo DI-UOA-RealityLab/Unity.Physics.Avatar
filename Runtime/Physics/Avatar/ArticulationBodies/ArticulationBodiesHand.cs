@@ -73,8 +73,6 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
 
         void SetupHand()
         {
-            CleanHandParentTransforms();
-
             CreateHandHierarchy();
 
             SetupHandArticulationBodies();

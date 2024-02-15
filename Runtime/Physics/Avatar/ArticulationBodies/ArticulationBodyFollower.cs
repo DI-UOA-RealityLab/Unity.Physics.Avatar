@@ -74,7 +74,7 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
         {
             if (XAxisPositionBody || YAxisPositionBody || ZAxisPositionBody)
             {
-                PositionDelta = Target.position - StartingPosition;
+                PositionDelta = StartingPosition.InverseTransformPoint(Quaternion.Euler(StartingRotation), Target.position);
             }
 
             SetArticulationBodyXDrive(XAxisPositionBody, PositionDelta.x);
@@ -86,8 +86,7 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
         {
             if (RotateUsingParentAnchor)
             {
-                ArticulationBody.parentAnchorRotation = Target.rotation;
-
+                ArticulationBody.parentAnchorRotation = Quaternion.Inverse(ArticulationBody.transform.parent.rotation) * Target.rotation;
                 return;
             }
 

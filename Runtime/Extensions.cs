@@ -99,5 +99,14 @@ namespace NKUA.DI.RealityLab
         {
             return new Vector3(target.x, target.y, target.z);
         }
+
+        // copied from HPTK/Runtime/Helpers/MathHelpers.cs
+        public static Vector3 InverseTransformPoint(this Vector3 parentWorldPosition, Quaternion parentWorldRotation, Vector3 childWorldPosition)
+        {
+            Quaternion inverseParentRotation = Quaternion.Inverse(parentWorldRotation);
+            Vector3 relativeWorldPosition = childWorldPosition - parentWorldPosition;
+            Vector3 relativeLocalPosition = inverseParentRotation * relativeWorldPosition;
+            return relativeLocalPosition;
+        }
     }
 }
