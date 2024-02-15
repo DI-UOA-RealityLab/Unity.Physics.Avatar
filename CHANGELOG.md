@@ -1,3 +1,10 @@
+## 0.0.13 (2024-02-15)
+
+#### Improvements
+
+* **improvement:** Improve AB position and rotation calculations
+  > Placing the physics hands in the scene somewhere else apart from origin wasn't possible with the previous versions. Now this is supported and no matter where the hands are placed in the scene they will work properly.
+
 ## 0.0.12 (2024-02-05)
 
 #### Fixes
