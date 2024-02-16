@@ -1,3 +1,10 @@
+## 0.0.14 (2024-02-16)
+
+#### Fixes
+
+* **fix:** Fix Root AB position and rotation calculation
+  > The previous attempt to fix the AB position and rotation calculation didn't work properly for the Root of the hand articulation. An attempt has been made to fix this issue.
+
 ## 0.0.13 (2024-02-15)
 
 #### Improvements
