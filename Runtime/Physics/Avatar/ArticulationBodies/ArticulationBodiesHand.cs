@@ -192,9 +192,6 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
             rootGameObject.transform.parent = palmRoot.parent.parent;
             palmRoot.parent.parent = rootGameObject.transform;
 
-            rootGameObject.transform.ResetLocalTransform();
-            palmRoot.ResetLocalTransform();
-
             return rootGameObject.transform;
         }
 
@@ -569,13 +566,15 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
                 palmArticulationBodyFollower.ZAxisRotationBody = PalmRotationZArticulationBody;
 
                 palmArticulationBodyFollower.ArticulationBody = PalmRotationZArticulationBody;
-                palmArticulationBodyFollower.UseWorldRotation = true;
+                // palmArticulationBodyFollower.UseWorldRotation = true;
             }
 
             SetupArticulationBodyFollowerTarget(palmArticulationBodyFollower, AnimatedHandModel.transform);
 
             // spherical joint
             // articulationBodyFollower.AllAxesRotationBody = PalmRotationArticulationBody;
+
+            palmArticulationBodyFollower.UseWorldRotation = true;
 
             // prismatic joint
             palmArticulationBodyFollower.XAxisPositionBody = PalmPositionXArticulationBody;

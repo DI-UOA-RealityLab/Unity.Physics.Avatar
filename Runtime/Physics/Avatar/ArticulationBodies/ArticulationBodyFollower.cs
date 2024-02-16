@@ -24,6 +24,7 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
         public ArticulationBody AllAxesRotationBody;
         public bool RotateUsingParentAnchor;
 
+        ArticulationBody Root;
         Vector3 StartingPosition, PositionDelta;
         Vector3 StartingRotation, RotationDelta, PreviousParentAnchorRotation;
         float CurrentAngleInRange;
@@ -33,6 +34,19 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
         void Start()
         {
             SetStartingPositionAndRotation();
+
+            if (RotateUsingParentAnchor)
+            {
+                ArticulationBody[] abParents = ArticulationBody.GetComponentsInParent<ArticulationBody>();
+
+                foreach (ArticulationBody ab in abParents)
+                {
+                    if (ab.isRoot)
+                    {
+                        Root = ab;
+                    }
+                }
+            }
         }
 
         void FixedUpdate()
@@ -47,7 +61,8 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
         void SetStartingPositionAndRotation()
         {
             StartingPosition = transform.position;
-            StartingRotation = Target.localRotation.eulerAngles;
+
+            StartingRotation = UseWorldRotation ? Target.rotation.eulerAngles : Target.localRotation.eulerAngles;
 
             PreviousParentAnchorRotation = ArticulationBody.parentAnchorRotation.eulerAngles;
         }
@@ -86,7 +101,7 @@ namespace NKUA.DI.RealityLab.Physics.Avatar
         {
             if (RotateUsingParentAnchor)
             {
-                ArticulationBody.parentAnchorRotation = Quaternion.Inverse(ArticulationBody.transform.parent.rotation) * Target.rotation;
+                ArticulationBody.parentAnchorRotation = Quaternion.Inverse(Root.transform.rotation) * Target.rotation;
                 return;
             }
 
